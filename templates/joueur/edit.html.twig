@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l'athlète - UniGames{% endblock %}
+
+{% block breadcrumb %}Gestion / Joueurs / <span>Modifier</span>{% endblock %}
+
+{% block body %}
+<div class="fmain max-w-2xl mx-auto">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-xl font-bold text-text-main">Modifier : {{ joueur.prenom }} {{ joueur.nom }}</h1>
+        <form method="post" action="{{ path('app_joueur_delete', {'id': joueur.id}) }}" onsubmit="return confirm('Supprimer ce joueur ?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ joueur.id) }}">
+            <button class="bsm !border-red-500 !text-red-500 hover:!bg-red-500 hover:!text-white flex items-center gap-2">
+                <i class="ti ti-trash"></i> Supprimer le joueur
+            </button>
+        </form>
+    </div>
+
+    {{ form_start(form) }}
+        <div class="fcard">
+            <div class="fstitle">Identité de l'athlète</div>
+            
+            <div class="frow">
+                <div class="fg">
+                    <label class="fgl">Prénom *</label>
+                    {{ form_widget(form.prenom, {'attr': {'class': 'fgi foc'}}) }}
+                    {{ form_errors(form.prenom) }}
+                </div>
+                <div class="fg">
+                    <label class="fgl">Nom *</label>
+                    {{ form_widget(form.nom, {'attr': {'class': 'fgi'}}) }}
+                    {{ form_errors(form.nom) }}
+                </div>
+            </div>
+
+            <div class="frow mt-4">
+                <div class="fg">
+                    <label class="fgl">Sexe *</label>
+                    {{ form_widget(form.sexe, {'attr': {'class': 'fgi'}}) }}
+                    {{ form_errors(form.sexe) }}
+                </div>
+                <div class="fg">
+                    <label class="fgl">Numéro de maillot</label>
+                    {{ form_widget(form.numero, {'attr': {'class': 'fgi'}}) }}
+                    {{ form_errors(form.numero) }}
+                </div>
+            </div>
+
+            <div x-data="{
+                discipline: '{{ joueur.equipe ? joueur.equipe.discipline.id : '' }}',
+                init() {
+                    this.filterEquipes();
+                },
+                filterEquipes() {
+                    let select = $refs.equipeSelect;
+                    let options = select.querySelectorAll('option');
+                    options.forEach(opt => {
+                        if (!opt.value) return; // ignore placeholder
+                        if (this.discipline === '' || opt.dataset.discipline === this.discipline) {
+                            opt.style.display = '';
+                            opt.disabled = false;
+                        } else {
+                            opt.style.display = 'none';
+                            opt.disabled = true;
+                            if (opt.selected) opt.selected = false;
+                        }
+                    });
+                }
+            }" class="frow mt-4">
+                <div class="fg">
+                    <label class="fgl">Discipline (Filtre)</label>
+                    {{ form_widget(form.discipline, {'attr': {'class': 'fgi', 'x-model': 'discipline', '@change': 'filterEquipes'}}) }}
+                </div>
+                <div class="fg">
+                    <label class="fgl">Équipe *</label>
+                    {{ form_widget(form.equipe, {'attr': {'class': 'fgi', 'x-ref': 'equipeSelect'}}) }}
+                    {{ form_errors(form.equipe) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="factions">
+            <a href="{{ path('app_joueur_index') }}" class="fac flex items-center gap-2">
+                <i class="ti ti-arrow-left"></i> Annuler
+            </a>
+            <button type="submit" class="fap flex items-center gap-2">
+                Enregistrer les modifications <i class="ti ti-arrow-right"></i>
+            </button>
+        </div>
+    {{ form_end(form) }}
+</div>
+
+<style>
+    .fcard { background:#fff; border-radius:7px; border:0.5px solid #DDE3ED; padding:24px; margin-bottom:16px; }
+    .fstitle { font-size:10px; font-weight:700; color:#8A96A8; text-transform:uppercase; letter-spacing:.07em; margin-bottom:20px; padding-bottom:8px; border-bottom:0.5px solid #DDE3ED; }
+    .frow { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+    .fg { display:flex; flex-direction:column; gap:6px; }
+    .fgl { font-size:11px; font-weight:600; color:#374151; }
+    .fgi { height:40px; border:1.5px solid #DDE3ED; border-radius:6px; padding:0 12px; font-size:13px; background:#fff; color:#0D1F3C; width:100%; outline:none; }
+    .fgi:focus { border-color:#005BAA; box-shadow:0 0 0 3px rgba(0,91,170,0.1); }
+    .factions { display:flex; align-items:center; justify-content:flex-end; gap:12px; }
+    .fac { font-size:12px; padding:8px 16px; border-radius:6px; border:1px solid #DDE3ED; color:#8A96A8; background:transparent; font-weight:600; text-decoration:none; }
+    .fap { font-size:12px; padding:8px 20px; border-radius:6px; background:#005BAA; color:#fff; border:none; font-weight:700; }
+</style>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Matchs - UniGames{% endblock %}
+
+{% block breadcrumb %}Compétition / <span>Matchs</span>{% endblock %}
+
+{% block body %}
+<div class="dc">
+    <div class="dch">
+        <div class="dct">
+            {% if activeEdition %}
+                Calendrier & Résultats · {{ activeEdition.nom }}{% if active_discipline %} · {{ active_discipline.nom }}{% endif %}
+            {% else %}
+                Calendrier & Résultats
+            {% endif %}
+        </div>
+        {% if is_granted('ROLE_STAFF') and activeEdition %}
+            <a href="{{ path('app_match_new') }}" class="bsm bsm-primary">
+                <i class="ti ti-plus text-[12px]"></i> Programmer un match
+            </a>
+        {% endif %}
+    </div>
+    <div class="overflow-x-auto">
+        <table class="mt">
+            <thead>
+                <tr>
+                    <th>Date & Discipline</th>
+                    <th>Équipes</th>
+                    <th class="text-center">Score</th>
+                    <th>Statut</th>
+                    <th class="text-right">Détails</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for match in matchs %}
+                    <tr>
+                        <td>
+                            <p class="font-bold">{{ match.dateMatch|date('d M Y') }}</p>
+                            <p class="text-[9px] text-text-sub uppercase tracking-widest">{{ match.discipline.nom }} · {{ match.dateMatch|date('H:i') }}</p>
+                        </td>
+                        <td>
+                            <div class="flex items-center gap-3">
+                                <span class="font-medium">{{ match.equipeA.nom }}</span>
+                                <span class="text-[9px] text-slate-300">vs</span>
+                                <span class="font-medium">{{ match.equipeB.nom }}</span>
+                            </div>
+                        </td>
+                        <td class="text-center font-mono font-black text-primary text-[14px]">
+                            {{ match.scoreA }} – {{ match.scoreB }}
+                        </td>
+                        <td>
+                            {% if match.statut == 'joue' %}
+                                <span class="bdg bg">Joué</span>
+                            {% elseif match.statut == 'en_cours' %}
+                                <span class="bdg ba">En cours</span>
+                            {% else %}
+                                <span class="bdg bb">Planifié</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-right">
+                            <a href="{{ path('app_match_show', {id: match.id}) }}" class="bsm !p-1.5"><i class="ti ti-chevron-right"></i></a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center py-10 text-text-sub italic">
+                            {% if not activeEdition %}
+                                <i class="ti ti-calendar-off text-[28px] text-slate-200 mb-2 block"></i>
+                                Veuillez sélectionner une édition pour afficher les matchs.
+                            {% else %}
+                                Aucun match pour cette édition.
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

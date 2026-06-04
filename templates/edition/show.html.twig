@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ edition.nom }} - UniGames{% endblock %}
+
+{% block breadcrumb %}
+    <a href="{{ path('app_edition_index') }}" class="hover:text-primary transition-colors">Éditions</a> / <span>Détails</span>
+{% endblock %}
+
+{% block body %}
+<div class="dc max-w-4xl mx-auto">
+    <div class="dch">
+        <div class="dct flex items-center gap-3">
+            <a href="{{ path('app_edition_index') }}" class="bsm !p-1.5 !border-transparent hover:!bg-slate-100 hover:!text-text-main text-text-sub"><i class="ti ti-arrow-left"></i></a>
+            Détails de l'édition
+        </div>
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="flex gap-2">
+                <button class="bsm"><i class="ti ti-edit"></i> Modifier</button>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="p-8">
+        <div class="flex items-center justify-between mb-8 pb-6 border-b border-border-tertiary">
+            <div>
+                <h1 class="text-2xl font-bold text-text-main mb-2">{{ edition.nom }}</h1>
+                <div class="flex gap-4 text-sm text-text-sub">
+                    <span class="flex items-center gap-1.5"><i class="ti ti-calendar"></i> Du {{ edition.dateDebut|date('d/m/Y') }}</span>
+                    <span class="flex items-center gap-1.5"><i class="ti ti-calendar-due"></i> Au {{ edition.dateFin|date('d/m/Y') }}</span>
+                </div>
+            </div>
+            
+            {% set now = "now"|date('Y-m-d') %}
+            {% set start = edition.dateDebut|date('Y-m-d') %}
+            {% set end = edition.dateFin|date('Y-m-d') %}
+            
+            {% if now >= start and now <= end %}
+                <span class="bdg bg !text-sm !px-4 !py-1.5"><i class="ti ti-activity mr-1.5"></i> En cours</span>
+            {% elseif now > end %}
+                <span class="bdg bb !text-sm !px-4 !py-1.5">Terminé</span>
+            {% else %}
+                <span class="bdg ba !text-sm !px-4 !py-1.5">À venir</span>
+            {% endif %}
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-app-bg rounded-lg p-6 border border-border-tertiary">
+                <h3 class="text-xs font-bold text-text-sub uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <i class="ti ti-building"></i> Facultés participantes
+                </h3>
+                <div class="text-3xl font-black text-primary mb-1">{{ edition.facultes|length }}</div>
+                <div class="text-xs text-text-sub">Facultés inscrites</div>
+            </div>
+            
+            <div class="bg-app-bg rounded-lg p-6 border border-border-tertiary">
+                <h3 class="text-xs font-bold text-text-sub uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <i class="ti ti-device-gamepad"></i> Matchs planifiés
+                </h3>
+                <div class="text-3xl font-black text-primary mb-1">{{ edition.matchs|length }}</div>
+                <div class="text-xs text-text-sub">Rencontres au total</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

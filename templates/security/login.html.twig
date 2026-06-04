@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion - UniGames</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <style>
+        :root {
+            --sb-bg: #0D1F3C;
+            --accent: #005BAA;
+            --app-bg: #EEF2F7;
+            --border: #DDE3ED;
+            --text-main: #0D1F3C;
+            --text-sub: #8A96A8;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--app-bg); margin: 0; }
+        
+        .lsplit { display: flex; height: 100vh; overflow: hidden; }
+        
+        .ll { width: 40%; background: var(--sb-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px; gap: 24px; position: relative; }
+        .ll::after { content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 1px; background: rgba(255,255,255,0.05); }
+        
+        .ll-icon { width: 64px; height: 64px; border-radius: 14px; background: var(--accent); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 32px; box-shadow: 0 10px 20px rgba(0,91,170,0.3); }
+        .ll-big { font-size: 28px; font-weight: 800; color: #fff; text-align: center; line-height: 1.2; letter-spacing: -0.02em; }
+        .ll-tag { font-size: 12px; color: rgba(255,255,255,.3); text-align: center; text-transform: uppercase; letter-spacing: 0.1em; }
+        
+        .ll-feats { width: 100%; max-width: 300px; display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+        .ll-f { display: flex; align-items: center; gap: 12px; font-size: 13px; color: rgba(255,255,255,.6); }
+        .ll-fd { width: 16px; height: 16px; border-radius: 50%; background: rgba(96,165,250,.1); border: 1.5px solid #60A5FA; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .ll-fd::after { content:''; width: 6px; height: 6px; border-radius: 50%; background: #60A5FA; }
+
+        .lr { flex: 1; display: flex; align-items: center; justify-content: center; padding: 48px; }
+        .lbox { background: #fff; border-radius: 12px; border: 0.5px solid var(--border); padding: 40px; width: 100%; max-width: 420px; box-shadow: 0 20px 50px rgba(0,0,0,0.05); }
+        
+        .lt { font-size: 22px; font-weight: 800; color: var(--text-main); margin-bottom: 4px; letter-spacing: -0.01em; }
+        .ls { font-size: 13px; color: var(--text-sub); margin-bottom: 24px; }
+        
+        .ll2 { font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .iw { position: relative; margin-bottom: 16px; }
+        .ii { width: 100%; height: 48px; border: 2px solid var(--border); border-radius: 8px; padding: 0 12px 0 44px; font-size: 14px; color: var(--text-main); background: #fff; transition: all 0.2s; outline: none; }
+        .ii:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(0,91,170,.08); }
+        .iic { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #B0BAC9; font-size: 18px; }
+        
+        .lbtn { width: 100%; height: 48px; border-radius: 8px; background: var(--accent); color: #fff; border: none; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,91,170,0.2); }
+        .lbtn:hover { background: #004d91; transform: translateY(-1px); box-shadow: 0 6px 15px rgba(0,91,170,0.25); }
+        .lbtn:active { transform: translateY(0); }
+        
+        .lfoot { font-size: 11px; color: #B0BAC9; text-align: center; margin-top: 24px; }
+    </style>
+</head>
+<body>
+    <div class="lsplit">
+        <!-- Colonne de gauche (Branding) -->
+        <div class="ll">
+            <div class="ll-icon"><i class="ti ti-trophy"></i></div>
+            <div class="ll-big">UniGames<br>Sports Platform</div>
+            <div class="ll-tag">Champions University</div>
+            
+            <div class="ll-feats">
+                <div class="ll-f"><div class="ll-fd"></div>Gestion en temps réel</div>
+                <div class="ll-f"><div class="ll-fd"></div>Classements automatiques</div>
+                <div class="ll-f"><div class="ll-fd"></div>Plateforme multi-sports</div>
+            </div>
+
+            <div class="absolute bottom-12 text-[10px] text-white/20 uppercase tracking-[0.2em] font-bold">
+                Powered by Symfony 7
+            </div>
+        </div>
+
+        <!-- Colonne de droite (Formulaire) -->
+        <div class="lr">
+            <div class="lbox">
+                <h1 class="lt">Bon retour !</h1>
+                <p class="ls">Connectez-vous à votre compte de gestion</p>
+
+                <form method="post">
+                    {% if error %}
+                        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded">
+                            <p class="text-[12px] text-red-700 font-medium">{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+                        </div>
+                    {% endif %}
+
+                    <div class="ll2">Adresse Email</div>
+                    <div class="iw">
+                        <i class="ti ti-mail iic"></i>
+                        <input class="ii" placeholder="admin@unigames.edu" type="email" name="_username" value="{{ last_username }}" required autofocus autocomplete="username" />
+                    </div>
+
+                    <div class="ll2">Mot de passe</div>
+                    <div class="iw">
+                        <i class="ti ti-lock iic"></i>
+                        <input class="ii" placeholder="••••••••" type="password" name="_password" required autocomplete="current-password" />
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <div class="flex items-center justify-between mb-6">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" name="_remember_me" class="w-4 h-4 rounded border-border text-accent focus:ring-accent/20">
+                            <span class="text-[12px] text-text-sub font-medium">Rester connecté</span>
+                        </label>
+                        <a href="javascript:alert('Veuillez contacter votre administrateur (admin@unigames.com) pour réinitialiser votre mot de passe.');" class="text-[12px] font-bold text-primary hover:underline">Oublié ?</a>
+                    </div>
+
+                    <button class="lbtn" type="submit">Se connecter</button>
+                    
+                    <div class="lfoot">© {{ "now"|date("Y") }} UniGames · Tous droits réservés</div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

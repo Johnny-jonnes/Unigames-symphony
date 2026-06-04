@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Joueurs - UniGames{% endblock %}
+
+{% block breadcrumb %}Gestion / <span>Joueurs</span>{% endblock %}
+
+{% block body %}
+<div class="dc">
+    <div class="dch">
+        <div class="dct">
+            {% if activeEdition %}
+                Athlètes · {{ activeEdition.nom }}{% if active_discipline %} · {{ active_discipline.nom }}{% endif %} ({{ joueurs|length }})
+            {% else %}
+                Liste des Athlètes
+            {% endif %}
+        </div>
+        {% if is_granted('ROLE_STAFF') and activeEdition %}
+            <a href="{{ path('app_joueur_new') }}" class="bsm bsm-primary">
+                <i class="ti ti-plus text-[12px]"></i> Nouvel athlète
+            </a>
+        {% endif %}
+    </div>
+    <div class="p-4 space-y-4">
+        {% if not activeEdition %}
+            <div class="text-center py-12">
+                <i class="ti ti-calendar-off text-[36px] text-slate-200 mb-3 block"></i>
+                <p class="text-[13px] text-text-sub">Veuillez sélectionner une édition pour afficher les joueurs.</p>
+            </div>
+        {% elseif equipes_grouped is empty %}
+            <div class="text-center py-12">
+                <p class="text-[13px] text-text-sub italic">Aucun joueur pour cette édition.</p>
+            </div>
+        {% else %}
+        {% for group in equipes_grouped %}
+            <div x-data="{ expanded: false }" class="border border-slate-200 rounded-lg overflow-hidden bg-white">
+                <button @click="expanded = ! expanded" class="w-full px-5 py-4 flex items-center justify-between bg-slate-50 hover:bg-slate-100 transition-colors">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-[14px]">
+                            {{ group.equipe.nom|first|upper }}
+                        </div>
+                        <div class="text-left">
+                            <h3 class="font-bold text-[15px] text-text-primary">{{ group.equipe.nom }}</h3>
+                            <p class="text-[11px] text-text-sub uppercase tracking-wider">{{ group.equipe.faculte.nom }} · {{ group.equipe.discipline.nom }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="text-[12px] font-bold text-slate-400">{{ group.joueurs|length }} joueur(s)</span>
+                        <i class="ti ti-chevron-down text-slate-400 transition-transform duration-200" :class="expanded ? 'rotate-180' : ''"></i>
+                    </div>
+                </button>
+                
+                <div x-show="expanded" x-collapse>
+                    <div class="p-0 border-t border-slate-200">
+                        <table class="mt w-full">
+                            <thead>
+                                <tr>
+                                    <th>Joueur</th>
+                                    <th class="text-center">Numéro</th>
+                                    <th>Sexe</th>
+                                    {% if is_granted('ROLE_STAFF') %}
+                                        <th class="text-right">Actions</th>
+                                    {% endif %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for joueur in group.joueurs %}
+                                    <tr>
+                                        <td>
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-text-sub font-bold text-[10px]">
+                                                    {{ joueur.nom|first|upper }}{{ joueur.prenom|first|upper }}
+                                                </div>
+                                                <p class="font-bold leading-tight">{{ joueur.prenom }} {{ joueur.nom }}</p>
+                                            </div>
+                                        </td>
+                                        <td class="text-center font-mono font-bold text-primary">{{ joueur.numero }}</td>
+                                        <td><span class="bdg bb">{{ joueur.sexe }}</span></td>
+                                        {% if is_granted('ROLE_STAFF') %}
+                                            <td class="text-right">
+                                                <div class="flex justify-end gap-2">
+                                                    <a href="{{ path('app_joueur_edit', {'id': joueur.id}) }}" class="bsm !p-1.5"><i class="ti ti-edit"></i></a>
+                                                </div>
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="p-8 text-center text-slate-400 text-[13px] italic">Aucun joueur enregistré.</div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

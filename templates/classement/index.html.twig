@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Classements - UniGames{% endblock %}
+
+{% block breadcrumb %}Compétition / <span>Classements</span>{% endblock %}
+
+{% block body %}
+<!-- Filtres stylisés selon la maquette -->
+<div class="dc p-4 mb-6">
+    <form method="GET" class="flex flex-wrap items-end gap-4">
+        <div class="flex flex-col gap-1.5 flex-1 min-w-[200px]">
+            <label class="text-[10px] font-bold text-text-sub uppercase tracking-wider">Édition</label>
+            <select name="edition" class="h-9 border-2 border-border border-slate-200 rounded-md px-3 text-[12px] outline-none focus:border-primary">
+                <option value="">Toutes les éditions</option>
+                {% for e in editions %}
+                    <option value="{{ e.id }}" {{ selectedEdition == e.id ? 'selected' : '' }}>{{ e.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="flex flex-col gap-1.5 flex-1 min-w-[200px]">
+            <label class="text-[10px] font-bold text-text-sub uppercase tracking-wider">Discipline</label>
+            <select name="discipline" class="h-9 border-2 border-border border-slate-200 rounded-md px-3 text-[12px] outline-none focus:border-primary">
+                <option value="">Toutes les disciplines</option>
+                {% for d in disciplines %}
+                    <option value="{{ d.id }}" {{ selectedDiscipline == d.id ? 'selected' : '' }}>{{ d.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="bsm bsm-primary h-9">Filtrer</button>
+    </form>
+</div>
+
+{% if classement is not empty %}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Tableau principal -->
+        <div class="lg:col-span-2 dc">
+            <div class="dch">
+                <div class="dct">Classement Général</div>
+                <span class="bdg bg">Calculé en temps réel</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="mt">
+                    <thead>
+                        <tr>
+                            <th class="w-12 text-center">#</th>
+                            <th>Équipe</th>
+                            <th class="text-center">Pts</th>
+                            <th class="text-center">J</th>
+                            <th class="text-center">G</th>
+                            <th class="text-center">N</th>
+                            <th class="text-center">P</th>
+                            <th class="text-center">Diff</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in classement %}
+                            <tr>
+                                <td class="text-center">
+                                    <div class="w-6 h-6 rounded flex items-center justify-center font-bold text-[10px] mx-auto 
+                                        {{ loop.index == 1 ? 'bg-amber-100 text-amber-700' : (loop.index == 2 ? 'bg-slate-100 text-slate-600' : (loop.index == 3 ? 'bg-orange-100 text-orange-700' : 'text-text-sub')) }}">
+                                        {{ loop.index }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="font-bold">{{ stat.equipe.nom }}</p>
+                                    <p class="text-[9px] text-text-sub uppercase">{{ stat.equipe.faculte.nom }}</p>
+                                </td>
+                                <td class="text-center font-black text-primary text-[14px]">{{ stat.points }}</td>
+                                <td class="text-center font-medium">{{ stat.matchs_joues }}</td>
+                                <td class="text-center text-green-600 font-bold">{{ stat.victoires }}</td>
+                                <td class="text-center text-slate-400">{{ stat.nuls }}</td>
+                                <td class="text-center text-red-500">{{ stat.defaites }}</td>
+                                <td class="text-center font-mono font-bold">{{ stat.difference > 0 ? '+' : '' }}{{ stat.difference }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Sidebar stats -->
+        <div class="space-y-6">
+            <div class="dc">
+                <div class="dch"><div class="dct">Progression</div></div>
+                <div class="p-4 space-y-4">
+                    {% for stat in classement|slice(0, 3) %}
+                        <div>
+                            <div class="flex justify-between text-[11px] font-bold mb-1.5">
+                                <span>{{ stat.equipe.nom }}</span>
+                                <span class="text-primary">{{ stat.points }} pts</span>
+                            </div>
+                            <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-primary rounded-full" style="width: {{ (stat.points / (classement|first).points * 100)|default(0) }}%"></div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="dc p-12 text-center bg-slate-50 border-dashed">
+        <i class="ti ti-chart-bar text-[48px] text-slate-200 mb-4"></i>
+        <p class="text-[14px] text-text-sub">Sélectionnez une édition et une discipline pour afficher les résultats.</p>
+    </div>
+{% endif %}
+{% endblock %}

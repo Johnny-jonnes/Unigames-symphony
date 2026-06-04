@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Équipes - UniGames{% endblock %}
+
+{% block breadcrumb %}Gestion / <span>Équipes</span>{% endblock %}
+
+{% block body %}
+<div class="dc">
+    <div class="dch">
+        <div class="dct">
+            {% if activeEdition %}
+                Équipes · {{ activeEdition.nom }}{% if active_discipline %} · {{ active_discipline.nom }}{% endif %} ({{ equipes|length }})
+            {% else %}
+                Répertoire des Équipes
+            {% endif %}
+        </div>
+        {% if is_granted('ROLE_ADMIN') and activeEdition %}
+            <a href="{{ path('app_equipe_new') }}" class="bsm bsm-primary">
+                <i class="ti ti-plus text-[12px]"></i> Ajouter une équipe
+            </a>
+        {% endif %}
+    </div>
+    <div class="overflow-x-auto">
+        <table class="mt">
+            <thead>
+                <tr>
+                    <th>Équipe</th>
+                    <th>Faculté</th>
+                    <th>Discipline</th>
+                    <th class="text-center">Joueurs</th>
+                    <th>Statut</th>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <th class="text-right">Actions</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for equipe in equipes %}
+                    <tr>
+                        <td class="font-bold">{{ equipe.nom }}</td>
+                        <td class="text-text-sub">{{ equipe.faculte.nom }}</td>
+                        <td><span class="bdg bb">{{ equipe.discipline.nom }}</span></td>
+                        <td class="text-center font-mono font-bold">{{ equipe.joueurs|length }}</td>
+                        <td><span class="bdg bg">Actif</span></td>
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <td class="text-right">
+                            <div class="flex justify-end gap-2">
+                                <a href="{{ path('app_equipe_edit', {'id': equipe.id}) }}" class="bsm !p-1.5"><i class="ti ti-edit"></i></a>
+                                <form method="post" action="{{ path('app_equipe_delete', {'id': equipe.id}) }}" onsubmit="return confirm('Supprimer cette équipe ?');" style="display:inline-block;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ equipe.id) }}">
+                                    <button class="bsm !p-1.5 !border-red-500 !text-red-500 hover:!bg-red-500 hover:!text-white"><i class="ti ti-trash"></i></button>
+                                </form>
+                            </div>
+                        </td>
+                        {% endif %}
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center py-10 text-text-sub italic">
+                            {% if not activeEdition %}
+                                <i class="ti ti-calendar-off text-[28px] text-slate-200 mb-2 block"></i>
+                                Veuillez sélectionner une édition pour afficher les équipes.
+                            {% else %}
+                                Aucune équipe pour cette édition.
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

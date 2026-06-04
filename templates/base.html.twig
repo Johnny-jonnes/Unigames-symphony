@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}UniGames - Sports Management{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+        
+        <!-- Icons: Tabler Icons -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+
+        <!-- Tailwind CSS CDN -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        
+        <!-- Alpine.js CDN -->
+        <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+        <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+        <style>
+            :root {
+                --sb-bg: #0D1F3C;
+                --accent: #005BAA;
+                --app-bg: #EEF2F7;
+                --border: #DDE3ED;
+                --text-main: #0D1F3C;
+                --text-sub: #8A96A8;
+            }
+
+            body {
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                background-color: var(--app-bg);
+                color: var(--text-main);
+                margin: 0;
+                overflow: hidden;
+                height: 100vh;
+            }
+
+            .shell { display: flex; height: 100vh; width: 100vw; }
+            
+            .sb { width: 220px; flex-shrink: 0; background: var(--sb-bg); display: flex; flex-direction: column; }
+            .sb-logo { padding: 18px 16px; border-bottom: 0.5px solid rgba(255,255,255,.07); }
+            .sb-icon { width: 34px; height: 34px; border-radius: 8px; background: var(--accent); display: flex; align-items: center; justify-content: center; margin-bottom: 8px; color: #fff; font-size: 18px; }
+            .sb-name { font-size: 14px; font-weight: 700; color: #fff; letter-spacing: -.01em; }
+            .sb-sub { font-size: 9px; color: rgba(255,255,255,.3); letter-spacing: .06em; text-transform: uppercase; }
+            
+            .sb-user { padding: 12px 16px; border-bottom: 0.5px solid rgba(255,255,255,.07); display: flex; align-items: center; gap: 10px; }
+            .sb-av { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #93C5FD; flex-shrink: 0; }
+            .sb-uname { font-size: 12px; font-weight: 600; color: #fff; }
+            .sb-urole { font-size: 10px; color: rgba(255,255,255,.35); }
+            
+            .sb-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+            .sb-grp { font-size: 10px; font-weight: 600; letter-spacing: .12em; color: rgba(255,255,255,.22); padding: 12px 16px 6px; text-transform: uppercase; }
+            .sb-lnk { display: flex; align-items: center; gap: 10px; padding: 9px 16px; font-size: 12px; color: rgba(255,255,255,.48); transition: all .12s; border-left: 3px solid transparent; text-decoration: none; }
+            .sb-lnk:hover:not(.on) { color: rgba(255,255,255,.8); background: rgba(255,255,255,.05); }
+            .sb-lnk.on { color: #fff; background: var(--accent); border-left-color: #60A5FA; }
+            .sb-lnk i { font-size: 16px; }
+
+            .mc { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+            
+            .tbar { height: 56px; background: #fff; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0; }
+            .bread { font-size: 12px; color: var(--text-sub); }
+            .bread span { color: var(--text-main); font-weight: 600; }
+            
+            .pb { flex: 1; padding: 24px; overflow-y: auto; background: var(--app-bg); }
+
+            .kc { background: #fff; border-radius: 8px; border: 0.5px solid var(--border); padding: 16px; border-top: 4px solid var(--kk); }
+            .kl { font-size: 10px; color: var(--text-sub); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
+            .kv { font-size: 24px; font-weight: 800; color: var(--text-main); }
+            .ks { font-size: 10px; color: #B0BAC9; margin-top: 2px; }
+
+            .dc { background: #fff; border-radius: 8px; border: 0.5px solid var(--border); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+            .dch { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 0.5px solid var(--border); background: #fff; }
+            .dct { font-size: 12px; font-weight: 700; color: var(--text-main); }
+
+            .mt { width: 100%; border-collapse: collapse; font-size: 12px; }
+            .mt th { background: #F8FAFC; padding: 10px 16px; text-align: left; font-size: 10px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: .04em; border-bottom: 0.5px solid var(--border); }
+            .mt td { padding: 12px 16px; border-bottom: 0.5px solid #F1F5F9; color: var(--text-main); }
+            
+            .bdg { font-size: 10px; padding: 3px 10px; border-radius: 12px; font-weight: 600; display: inline-flex; align-items: center; }
+            .bg { background: #DCFCE7; color: #166534; }
+            .bb { background: #DBEAFE; color: #1E40AF; }
+            .ba { background: #FEF3C7; color: #92400E; }
+            
+            .bsm { font-size: 11px; padding: 6px 14px; border-radius: 6px; border: 1px solid var(--accent); color: var(--accent); background: transparent; cursor: pointer; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+            .bsm:hover { background: var(--accent); color: #fff; }
+            .bsm-primary { background: var(--accent); color: #fff; }
+        </style>
+
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        <div class="shell">
+            <aside class="sb">
+                <div class="sb-logo">
+                    <div class="sb-icon"><i class="ti ti-trophy"></i></div>
+                    <div class="sb-name">UniGames</div>
+                    <div class="sb-sub">Sports Management</div>
+                </div>
+                
+                {% if app.user %}
+                <div class="sb-user">
+                    <div class="sb-av">{{ app.user.name|first|upper }}</div>
+                    <div>
+                        <div class="sb-uname">{{ app.user.name }}</div>
+                        <div class="sb-urole">
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <span style="color: var(--accent); font-weight: 700;">Administrateur</span>
+                            {% elseif is_granted('ROLE_STAFF') %}
+                                <span style="color: #10B981; font-weight: 700;">Staff</span>
+                            {% else %}
+                                <span style="color: #9CA3AF; font-weight: 600;">Lecteur</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <nav class="sb-nav">
+                    <div class="sb-grp">Général</div>
+                    <a href="{{ path('app_dashboard') }}" class="sb-lnk {{ app.request.attributes.get('_route') == 'app_dashboard' ? 'on' : '' }}">
+                        <i class="ti ti-layout-dashboard"></i> Dashboard
+                    </a>
+
+                    <div class="sb-grp">Gestion</div>
+                    <a href="{{ path('app_edition_index') }}" class="sb-lnk {{ app.request.attributes.get('_route') starts with 'app_edition' ? 'on' : '' }}">
+                        <i class="ti ti-calendar-event"></i> Éditions
+                    </a>
+                    <a href="{{ path('app_faculte_index') }}" class="sb-lnk {{ app.request.attributes.get('_route') starts with 'app_faculte' ? 'on' : '' }}">
+                        <i class="ti ti-building"></i> Facultés
+                    </a>
+                    <a href="{{ path('app_discipline_index') }}" class="sb-lnk {{ app.request.attributes.get('_route') starts with 'app_discipline' ? 'on' : '' }}">
+                        <i class="ti ti-ball-football"></i> Disciplines
+                    </a>
+                    <a href="{{ path('app_equipe_index') }}" class="sb-lnk {{ app.request.attributes.get('_route') starts with 'app_equipe' ? 'on' : '' }}">
+                        <i class="ti ti-users"></i> Équipes
+                    </a>
+                    <a href="{{ path('app_joueur_index') }}" class="sb-lnk {{ app.request.attributes.get('_route') starts with 'app_joueur' ? 'on' : '' }}">
+                        <i class="ti ti-user"></i> Joueurs
+                    </a>
+
+                    <div class="sb-grp">Compétition</div>
+                    <a href="{{ path('app_match_index') }}" class="sb-lnk {{ app.request.attributes.get('_route') starts with 'app_match' ? 'on' : '' }}">
+                        <i class="ti ti-device-gamepad"></i> Matchs
+                    </a>
+                    <a href="{{ path('app_classement_index') }}" class="sb-lnk {{ app.request.attributes.get('_route') starts with 'app_classement' ? 'on' : '' }}">
+                        <i class="ti ti-chart-bar"></i> Classements
+                    </a>
+
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <div class="sb-grp">Administration</div>
+                        <a href="{{ path('app_admin_user_index') }}" class="sb-lnk {{ app.request.attributes.get('_route') starts with 'app_admin_user' ? 'on' : '' }}">
+                            <i class="ti ti-settings"></i> Utilisateurs
+                        </a>
+                    {% endif %}
+                </nav>
+
+                <div class="p-4 border-t border-white/5">
+                    <a href="{{ path('app_logout') }}" class="sb-lnk !text-red-400 hover:!bg-red-500/10 !border-none">
+                        <i class="ti ti-logout"></i> Déconnexion
+                    </a>
+                </div>
+            </aside>
+
+            <div class="mc">
+                <header class="tbar">
+                    <div class="bread">
+                        {% block breadcrumb %}<span>Dashboard</span>{% endblock %}
+                    </div>
+                    <div class="flex items-center gap-4">
+                        {% if all_editions is defined and all_editions|length > 0 %}
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = !open" @click.away="open = false" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-[12px] font-medium hover:bg-slate-50 transition-colors">
+                                <i class="ti ti-calendar-event text-accent"></i>
+                                <span>{{ active_edition ? active_edition.nom : 'Sélectionner une édition...' }}</span>
+                                <i class="ti ti-chevron-down text-[14px] text-slate-400"></i>
+                            </button>
+                            <div x-show="open" style="display: none;" class="absolute top-full right-0 mt-1 w-64 bg-white border border-slate-200 shadow-lg rounded-lg py-1 z-50">
+                                {% for edition in all_editions %}
+                                    <form method="post" action="{{ path('app_context_edition', {'id': edition.id}) }}" class="m-0">
+                                        <button type="submit" class="w-full text-left px-4 py-2 text-[12px] hover:bg-slate-50 {{ active_edition and active_edition.id == edition.id ? 'font-bold text-accent bg-blue-50/50' : 'text-slate-700' }}">
+                                            {{ edition.nom }}
+                                        </button>
+                                    </form>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if all_disciplines is defined and all_disciplines|length > 0 %}
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = !open" @click.away="open = false" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-[12px] font-medium hover:bg-slate-50 transition-colors">
+                                <i class="ti ti-ball-football text-green-600"></i>
+                                <span>{{ active_discipline ? active_discipline.nom : 'Toutes les disciplines' }}</span>
+                                <i class="ti ti-chevron-down text-[14px] text-slate-400"></i>
+                            </button>
+                            <div x-show="open" style="display: none;" class="absolute top-full right-0 mt-1 w-64 bg-white border border-slate-200 shadow-lg rounded-lg py-1 z-50">
+                                <form method="post" action="{{ path('app_context_discipline_clear') }}" class="m-0 border-b border-slate-100">
+                                    <button type="submit" class="w-full text-left px-4 py-2 text-[12px] hover:bg-slate-50 {{ not active_discipline ? 'font-bold text-green-600 bg-green-50/50' : 'text-slate-700' }}">
+                                        Toutes les disciplines
+                                    </button>
+                                </form>
+                                {% for discipline in all_disciplines %}
+                                    <form method="post" action="{{ path('app_context_discipline', {'id': discipline.id}) }}" class="m-0">
+                                        <button type="submit" class="w-full text-left px-4 py-2 text-[12px] hover:bg-slate-50 {{ active_discipline and active_discipline.id == discipline.id ? 'font-bold text-green-600 bg-green-50/50' : 'text-slate-700' }}">
+                                            {{ discipline.nom }}
+                                        </button>
+                                    </form>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 cursor-pointer hover:bg-slate-100 transition-colors">
+                            <i class="ti ti-bell text-[18px]"></i>
+                        </div>
+                        {% if app.user %}
+                        <div class="w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center font-bold text-[11px]">
+                            {{ app.user.name|first|upper }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </header>
+
+                <main class="pb">
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="mb-6 p-4 rounded-lg {{ label == 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200' }} flex items-center gap-3 text-[13px] font-medium animate-in fade-in slide-in-from-top-4">
+                                <i class="ti {{ label == 'success' ? 'ti-check' : 'ti-alert-circle' }} text-[18px]"></i>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+
+                    {% block body %}{% endblock %}
+                </main>
+            </div>
+        </div>
+
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

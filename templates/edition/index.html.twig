@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Éditions - UniGames{% endblock %}
+
+{% block breadcrumb %}Gestion / <span>Éditions</span>{% endblock %}
+
+{% block body %}
+<div class="dc">
+    <div class="dch">
+        <div class="dct">Toutes les éditions ({{ editions|length }})</div>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_edition_new') }}" class="bsm bsm-primary">
+                <i class="ti ti-plus text-[12px]"></i> Ajouter une édition
+            </a>
+        {% endif %}
+    </div>
+    <div class="overflow-x-auto">
+        <table class="mt">
+            <thead>
+                <tr>
+                    <th>Nom de l'édition</th>
+                    <th>Date de début</th>
+                    <th>Date de fin</th>
+                    <th>Statut</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for edition in editions %}
+                    {% set now = "now"|date('Y-m-d') %}
+                    {% set start = edition.dateDebut|date('Y-m-d') %}
+                    {% set end = edition.dateFin|date('Y-m-d') %}
+                    
+                    <tr class="group">
+                        <td class="font-bold">{{ edition.nom }}</td>
+                        <td>{{ edition.dateDebut|date('d/m/Y') }}</td>
+                        <td>{{ edition.dateFin|date('d/m/Y') }}</td>
+                        <td>
+                            {% if now >= start and now <= end %}
+                                <span class="bdg bg">En cours</span>
+                            {% elseif now > end %}
+                                <span class="bdg bb">Terminé</span>
+                            {% else %}
+                                <span class="bdg ba">À venir</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-right">
+                            <div class="flex justify-end gap-2">
+                                <a href="{{ path('app_edition_show', {id: edition.id}) }}" class="bsm !p-1.5"><i class="ti ti-eye"></i></a>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <a href="{{ path('app_edition_edit', {'id': edition.id}) }}" class="bsm !p-1.5"><i class="ti ti-edit"></i></a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

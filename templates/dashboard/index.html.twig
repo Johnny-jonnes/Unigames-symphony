@@ -1,0 +1,178 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard - UniGames{% endblock %}
+{% block breadcrumb %}<span>Dashboard</span>{% endblock %}
+
+{% block body %}
+
+{% if not activeEdition %}
+{# ═══════════════════════════════════════════════════════════════════
+   ÉTAT VIDE — Aucune édition sélectionnée
+═══════════════════════════════════════════════════════════════════ #}
+<div class="flex flex-col items-center justify-center" style="min-height: 65vh;">
+    <div class="text-center max-w-md">
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-blue-50 mb-6">
+            <i class="ti ti-calendar-event text-[40px] text-accent"></i>
+        </div>
+        <h1 class="text-2xl font-bold text-text-main mb-2">Bienvenue sur UniGames</h1>
+        <p class="text-[13px] text-text-sub mb-6 leading-relaxed">
+            Pour commencer, veuillez sélectionner une <strong>édition</strong> depuis le menu en haut à droite.
+            Toutes les statistiques, matchs, équipes et joueurs s'afficheront en fonction de l'édition choisie.
+        </p>
+
+        {% if all_editions is defined and all_editions|length > 0 %}
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden max-w-xs mx-auto">
+            <div class="px-4 py-3 bg-slate-50 border-b border-slate-100 text-[10px] font-semibold text-text-sub uppercase tracking-wider">
+                Éditions disponibles
+            </div>
+            {% for edition in all_editions %}
+                <form method="post" action="{{ path('app_context_edition', {'id': edition.id}) }}">
+                    <button type="submit" class="w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-blue-50 transition-colors border-b border-slate-50 last:border-0 group">
+                        <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0 group-hover:bg-accent group-hover:text-white transition-all text-accent">
+                            <i class="ti ti-calendar text-[14px]"></i>
+                        </div>
+                        <div class="text-left">
+                            <div class="text-[13px] font-semibold text-text-main">{{ edition.nom }}</div>
+                            <div class="text-[10px] text-text-sub">{{ edition.dateDebut|date('d/m/Y') }} → {{ edition.dateFin|date('d/m/Y') }}</div>
+                        </div>
+                        <i class="ti ti-arrow-right text-slate-300 ml-auto group-hover:text-accent transition-colors"></i>
+                    </button>
+                </form>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-[13px] text-amber-700">
+            <i class="ti ti-alert-triangle mr-2"></i>
+            Aucune édition n'a encore été créée.
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('app_edition_new') }}" class="font-bold underline ml-1">Créer une édition</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% else %}
+{# ═══════════════════════════════════════════════════════════════════
+   DASHBOARD PRINCIPAL — Édition sélectionnée
+═══════════════════════════════════════════════════════════════════ #}
+
+{# Bandeau édition active #}
+<div class="flex items-center gap-3 mb-6 p-3 bg-white rounded-lg border border-slate-200 shadow-sm">
+    <div class="w-9 h-9 rounded-lg bg-accent flex items-center justify-center flex-shrink-0">
+        <i class="ti ti-calendar-event text-white text-[16px]"></i>
+    </div>
+    <div>
+        <div class="text-[10px] font-semibold text-text-sub uppercase tracking-wider">Édition Active</div>
+        <div class="text-[14px] font-bold text-text-main">{{ activeEdition.nom }}</div>
+    </div>
+    <div class="ml-auto text-[11px] text-text-sub">
+        {{ activeEdition.dateDebut|date('d/m/Y') }} → {{ activeEdition.dateFin|date('d/m/Y') }}
+    </div>
+</div>
+
+{# KPIs #}
+<div class="kgrid">
+    <div class="kc" style="--kk:#005BAA">
+        <div class="kl"><i class="ti ti-users mr-1"></i>Équipes</div>
+        <div class="kv">{{ stats.equipes }}</div>
+        <div class="ks">inscrites à cette édition</div>
+    </div>
+    <div class="kc" style="--kk:#10B981">
+        <div class="kl"><i class="ti ti-run mr-1"></i>Joueurs</div>
+        <div class="kv">{{ stats.joueurs }}</div>
+        <div class="ks">enregistrés</div>
+    </div>
+    <div class="kc" style="--kk:#F59E0B">
+        <div class="kl"><i class="ti ti-check mr-1"></i>Matchs Joués</div>
+        <div class="kv">{{ stats.matchs_joues }}</div>
+        <div class="ks">terminés</div>
+    </div>
+    <div class="kc" style="--kk:#EF4444">
+        <div class="kl"><i class="ti ti-clock mr-1"></i>À venir</div>
+        <div class="kv">{{ stats.matchs_avenir }}</div>
+        <div class="ks">programmés</div>
+    </div>
+    <div class="kc" style="--kk:#8B5CF6">
+        <div class="kl"><i class="ti ti-building mr-1"></i>Facultés</div>
+        <div class="kv">{{ stats.facultes }}</div>
+        <div class="ks">participantes</div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
+    {# Matchs Récents #}
+    <div class="dc">
+        <div class="dch">
+            <div class="dct">Matchs récents · {{ activeEdition.nom }}{% if active_discipline %} · {{ active_discipline.nom }}{% endif %}</div>
+            <a href="{{ path('app_match_index') }}" class="bsm">Voir tout</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="mt">
+                <thead>
+                    <tr>
+                        <th>Équipes</th>
+                        <th class="text-center">Score</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for match in recentMatchs %}
+                        <tr>
+                            <td class="font-medium">
+                                <div class="flex items-center gap-2">
+                                    <span>{{ match.equipeA.nom }}</span>
+                                    <span class="text-[9px] text-slate-300">vs</span>
+                                    <span>{{ match.equipeB.nom }}</span>
+                                </div>
+                                <div class="text-[9px] text-text-sub uppercase tracking-wider mt-0.5">{{ match.discipline.nom }} · {{ match.dateMatch|date('d/m/Y') }}</div>
+                            </td>
+                            <td class="text-center font-bold text-primary">
+                                {% if match.statut == 'joue' %}
+                                    {{ match.scoreA }} – {{ match.scoreB }}
+                                {% else %}
+                                    <span class="text-text-sub">–</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if match.statut == 'joue' %}
+                                    <span class="bdg bg">Joué</span>
+                                {% elseif match.statut == 'en_cours' %}
+                                    <span class="bdg ba">En cours</span>
+                                {% else %}
+                                    <span class="bdg bb">Planifié</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center py-8 text-text-sub italic">Aucun match pour cette édition</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {# Top Classement #}
+    <div class="dc">
+        <div class="dch">
+            <div class="dct">Top classement</div>
+            <a href="{{ path('app_classement_index') }}" class="bsm">Classements</a>
+        </div>
+        <div class="p-2 space-y-1">
+            <div class="bg-slate-50 p-6 rounded-lg text-center">
+                <i class="ti ti-chart-bar text-[32px] text-slate-200 mb-2"></i>
+                <p class="text-[12px] text-text-sub">Sélectionnez une discipline pour voir le classement en temps réel.</p>
+                <a href="{{ path('app_classement_index') }}" class="bsm bsm-primary mt-4">Voir les classements</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+<style>
+    .kgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+</style>
+{% endblock %}

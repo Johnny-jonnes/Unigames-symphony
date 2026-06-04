@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la Faculté - UniGames{% endblock %}
+
+{% block breadcrumb %}Gestion / Facultés / <span>Modifier</span>{% endblock %}
+
+{% block body %}
+<div class="fmain max-w-2xl mx-auto">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-xl font-bold text-text-main">Modifier : {{ faculte.nom }}</h1>
+        <form method="post" action="{{ path('app_faculte_delete', {'id': faculte.id}) }}" onsubmit="return confirm('Supprimer cette faculté ?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ faculte.id) }}">
+            <button class="bsm !border-red-500 !text-red-500 hover:!bg-red-500 hover:!text-white flex items-center gap-2">
+                <i class="ti ti-trash"></i> Supprimer la faculté
+            </button>
+        </form>
+    </div>
+
+    {{ form_start(form) }}
+        <div class="fcard">
+            <div class="fstitle">Détails de la faculté</div>
+            
+            <div class="fg mb-6">
+                <label class="fgl">Nom de la faculté *</label>
+                {{ form_widget(form.nom, {'attr': {'class': 'fgi foc'}}) }}
+                {{ form_errors(form.nom) }}
+            </div>
+
+            <div class="fg mb-6">
+                <label class="fgl">Université *</label>
+                {{ form_widget(form.universite, {'attr': {'class': 'fgi'}}) }}
+                {{ form_errors(form.universite) }}
+            </div>
+
+            <div class="fg">
+                <label class="fgl">Édition associée *</label>
+                {{ form_widget(form.edition, {'attr': {'class': 'fgi'}}) }}
+                {{ form_errors(form.edition) }}
+            </div>
+        </div>
+
+        <div class="factions">
+            <a href="{{ path('app_faculte_index') }}" class="fac flex items-center gap-2">
+                <i class="ti ti-arrow-left"></i> Annuler
+            </a>
+            <button type="submit" class="fap flex items-center gap-2">
+                Enregistrer les modifications <i class="ti ti-arrow-right"></i>
+            </button>
+        </div>
+    {{ form_end(form) }}
+</div>
+
+<style>
+    .fcard { background:#fff; border-radius:7px; border:0.5px solid #DDE3ED; padding:24px; margin-bottom:16px; }
+    .fstitle { font-size:10px; font-weight:700; color:#8A96A8; text-transform:uppercase; letter-spacing:.07em; margin-bottom:20px; padding-bottom:8px; border-bottom:0.5px solid #DDE3ED; }
+    .fg { display:flex; flex-direction:column; gap:6px; }
+    .fgl { font-size:11px; font-weight:600; color:#374151; }
+    .fgi { height:40px; border:1.5px solid #DDE3ED; border-radius:6px; padding:0 12px; font-size:13px; background:#fff; color:#0D1F3C; width:100%; outline:none; }
+    .fgi:focus { border-color:#005BAA; box-shadow:0 0 0 3px rgba(0,91,170,0.1); }
+    .factions { display:flex; align-items:center; justify-content:flex-end; gap:12px; }
+    .fac { font-size:12px; padding:8px 16px; border-radius:6px; border:1px solid #DDE3ED; color:#8A96A8; background:transparent; font-weight:600; text-decoration:none; }
+    .fap { font-size:12px; padding:8px 20px; border-radius:6px; background:#005BAA; color:#fff; border:none; font-weight:700; }
+</style>
+{% endblock %}

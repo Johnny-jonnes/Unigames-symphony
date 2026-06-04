@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Utilisateurs - UniGames{% endblock %}
+
+{% block breadcrumb %}Administration / <span>Utilisateurs</span>{% endblock %}
+
+{% block body %}
+<div class="dc">
+    <div class="dch">
+        <div class="dct">Comptes utilisateurs ({{ users|length }})</div>
+        <button class="bsm bsm-primary">
+            <i class="ti ti-user-plus text-[12px]"></i> Nouvel utilisateur
+        </button>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="mt">
+            <thead>
+                <tr>
+                    <th>Utilisateur</th>
+                    <th>Email</th>
+                    <th>Rôles</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-[10px]">
+                                    {{ user.name|first|upper }}
+                                </div>
+                                <span class="font-bold">{{ user.name }}</span>
+                            </div>
+                        </td>
+                        <td class="text-text-sub font-medium">{{ user.email }}</td>
+                        <td>
+                            <div class="flex gap-1">
+                                {% for role in user.roles %}
+                                    {% if role != 'ROLE_USER' %}
+                                        <span class="bdg bb !text-[9px]">{{ role|replace({'ROLE_': ''}) }}</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </td>
+                        <td class="text-right">
+                            <div class="flex justify-end gap-2">
+                                <a href="{{ path('app_admin_user_edit', {'id': user.id}) }}" class="bsm !p-1.5"><i class="ti ti-edit"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

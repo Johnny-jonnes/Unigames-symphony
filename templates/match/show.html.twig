@@ -1,0 +1,197 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du Match - UniGames{% endblock %}
+
+{% block body %}
+<div class="mb-8">
+    <div class="flex items-center justify-between mb-4">
+        <a href="{{ path('app_match_index') }}" class="inline-flex items-center gap-2 text-text-muted hover:text-primary transition-colors text-[13px] font-medium">
+            <i class="ti ti-arrow-left"></i> Retour au calendrier
+        </a>
+        {% if is_granted('ROLE_STAFF') or is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_match_edit', {id: match.id}) }}" class="bsm !p-1.5"><i class="ti ti-edit"></i> Modifier détails</a>
+        {% endif %}
+    </div>
+    <h1 class="text-[24px] font-bold text-text-primary tracking-tight">Détails de la rencontre</h1>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Main Card Score -->
+    <div class="lg:col-span-2 space-y-8">
+        <div class="enterprise-card p-10 bg-gradient-to-br from-white to-slate-50 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-6">
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{{ match.discipline.nom }}</span>
+            </div>
+
+            <div class="flex flex-col items-center justify-center">
+                <div class="flex items-center justify-between w-full gap-8 mb-8">
+                    <div class="flex-1 text-center">
+                        <div class="w-20 h-20 rounded-full bg-white shadow-sm border border-slate-100 flex items-center justify-center mx-auto mb-4">
+                            <span class="text-2xl font-black text-primary">{{ match.equipeA.nom|first|upper }}</span>
+                        </div>
+                        <p class="text-[18px] font-bold text-text-primary leading-tight">{{ match.equipeA.nom }}</p>
+                        <p class="text-[12px] text-text-muted mt-1">{{ match.equipeA.faculte.nom }}</p>
+                    </div>
+
+                    <div class="flex flex-col items-center gap-2">
+                        <div class="flex items-center gap-6">
+                            <span class="text-[64px] font-mono font-black text-primary leading-none">{{ match.scoreA }}</span>
+                            <span class="text-[32px] font-mono font-bold text-slate-300">:</span>
+                            <span class="text-[64px] font-mono font-black text-primary leading-none">{{ match.scoreB }}</span>
+                        </div>
+                        <div class="mt-2">
+                             {% if match.statut == 'joue' %}
+                                <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-success/10 text-success uppercase tracking-wider">Terminé</span>
+                            {% elseif match.statut == 'en_cours' %}
+                                <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-accent/10 text-accent uppercase tracking-wider animate-pulse">En cours</span>
+                            {% else %}
+                                <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-text-muted uppercase tracking-wider">Programmé</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="flex-1 text-center">
+                        <div class="w-20 h-20 rounded-full bg-white shadow-sm border border-slate-100 flex items-center justify-center mx-auto mb-4">
+                            <span class="text-2xl font-black text-primary">{{ match.equipeB.nom|first|upper }}</span>
+                        </div>
+                        <p class="text-[18px] font-bold text-text-primary leading-tight">{{ match.equipeB.nom }}</p>
+                        <p class="text-[12px] text-text-muted mt-1">{{ match.equipeB.faculte.nom }}</p>
+                    </div>
+                </div>
+
+                <div class="w-full h-px bg-slate-200 mb-8"></div>
+
+                <div class="flex items-center gap-12 text-[14px]">
+                    <div class="flex items-center gap-2 text-text-muted">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span>{{ match.dateMatch|date('d F Y à H:i') }}</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-text-muted">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <span>{{ match.lieu|default('Non défini') }}</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-text-muted">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        <span>{{ match.phase|default('Phase régulière') }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buteurs -->
+        <div class="enterprise-card p-8">
+            <h3 class="text-[16px] font-bold text-text-primary mb-6 flex items-center gap-2">
+                <svg class="w-5 h-5 text-accent" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"></path></svg>
+                Faits de match & Buteurs
+            </h3>
+            
+            {% set buteursData = match.decodedButeurs %}
+            {% set buteursA = buteursData.equipe_a|default([]) %}
+            {% set buteursB = buteursData.equipe_b|default([]) %}
+
+            {% if buteursA is empty and buteursB is empty %}
+                <div class="bg-slate-50 rounded-xl p-8 text-center">
+                    <p class="text-[13px] text-text-muted italic">Aucun buteur enregistré pour cette rencontre.</p>
+                </div>
+            {% else %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <p class="text-[11px] font-bold text-text-muted uppercase mb-4">{{ match.equipeA.nom }}</p>
+                        <ul class="space-y-3">
+                            {% for b in buteursA %}
+                                <li class="flex items-center justify-between text-[14px]">
+                                    <span class="font-medium text-text-primary">{{ b.nom|default('Inconnu') }} {% if b.nb_buts|default(1) > 1 %}(x{{ b.nb_buts }}){% endif %}</span>
+                                    {% if b.minute is defined and b.minute %}
+                                        <span class="w-6 h-6 rounded bg-primary/5 text-primary flex items-center justify-center font-bold text-[10px]">{{ b.minute }}'</span>
+                                    {% endif %}
+                                </li>
+                            {% else %}
+                                <li class="text-[12px] text-slate-400 italic">Aucun buteur</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-bold text-text-muted uppercase mb-4">{{ match.equipeB.nom }}</p>
+                        <ul class="space-y-3">
+                            {% for b in buteursB %}
+                                <li class="flex items-center justify-between text-[14px]">
+                                    <span class="font-medium text-text-primary">{{ b.nom|default('Inconnu') }} {% if b.nb_buts|default(1) > 1 %}(x{{ b.nb_buts }}){% endif %}</span>
+                                    {% if b.minute is defined and b.minute %}
+                                        <span class="w-6 h-6 rounded bg-primary/5 text-primary flex items-center justify-center font-bold text-[10px]">{{ b.minute }}'</span>
+                                    {% endif %}
+                                </li>
+                            {% else %}
+                                <li class="text-[12px] text-slate-400 italic">Aucun buteur</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Sidebar actions (Score Entry) -->
+    <div class="space-y-8">
+        {% if is_granted('ROLE_STAFF') %}
+            <div class="enterprise-card p-6" x-data="{ 
+                buteurs: [],
+                addButeur() {
+                    this.buteurs.push({ nom: '', minute: '', equipe_id: '{{ match.equipeA.id }}' });
+                }
+            }">
+                <h3 class="text-[16px] font-bold text-text-primary mb-6">Saisie du Score</h3>
+                <form action="{{ path('app_match_score', {id: match.id}) }}" method="POST">
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="fg">
+                            <label class="fgl">{{ match.equipeA.nom }}</label>
+                            <input type="number" name="score_a" value="{{ match.scoreA }}" class="fgi text-center text-xl font-bold">
+                        </div>
+                        <div class="fg">
+                            <label class="fgl">{{ match.equipeB.nom }}</label>
+                            <input type="number" name="score_b" value="{{ match.scoreB }}" class="fgi text-center text-xl font-bold">
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <label class="enterprise-label mb-0">Buteurs</label>
+                            <button type="button" @click="addButeur()" class="text-[11px] font-bold text-primary hover:underline">+ Ajouter</button>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <template x-for="(buteur, index) in buteurs" :key="index">
+                                <div class="p-3 bg-slate-50 rounded-lg space-y-2 border border-slate-200">
+                                    <input type="text" :name="'buteurs['+index+'][nom]'" x-model="buteur.nom" placeholder="Nom du buteur" class="fgi h-8 text-[12px]">
+                                    <div class="flex gap-2">
+                                        <input type="number" :name="'buteurs['+index+'][minute]'" x-model="buteur.minute" placeholder="Min" class="fgi h-8 w-20 text-[12px]">
+                                        <select :name="'buteurs['+index+'][equipe_id]'" x-model="buteur.equipe_id" class="fgi h-8 flex-1 text-[12px]">
+                                            <option value="{{ match.equipeA.id }}">{{ match.equipeA.nom }}</option>
+                                            <option value="{{ match.equipeB.id }}">{{ match.equipeB.nom }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="bsm bsm-primary w-full py-2.5">Enregistrer le score</button>
+                </form>
+            </div>
+        {% endif %}
+
+        <div class="enterprise-card p-6">
+            <h3 class="text-[14px] font-bold text-text-primary mb-4">Informations</h3>
+            <div class="space-y-4">
+                <div>
+                    <p class="text-[11px] font-bold text-text-muted uppercase">Édition</p>
+                    <p class="text-[13px] font-medium text-text-primary">{{ match.edition.nom }}</p>
+                </div>
+                <div>
+                    <p class="text-[11px] font-bold text-text-muted uppercase">Arbitre</p>
+                    <p class="text-[13px] font-medium text-text-primary">Non assigné</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

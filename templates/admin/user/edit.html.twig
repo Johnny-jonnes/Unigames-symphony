@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l'utilisateur - Admin{% endblock %}
+
+{% block breadcrumb %}Administration / Utilisateurs / <span>Modifier</span>{% endblock %}
+
+{% block body %}
+<div class="fmain max-w-2xl mx-auto">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-xl font-bold text-text-main">Modifier : {{ user.email }}</h1>
+        
+        {% if user != app.user %}
+            <form method="post" action="{{ path('app_admin_user_delete', {'id': user.id}) }}" onsubmit="return confirm('Supprimer cet utilisateur définitivement ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                <button class="bsm !border-red-500 !text-red-500 hover:!bg-red-500 hover:!text-white flex items-center gap-2">
+                    <i class="ti ti-trash"></i> Supprimer
+                </button>
+            </form>
+        {% endif %}
+    </div>
+
+    <form method="post">
+        <div class="fcard">
+            <div class="fstitle">Informations de compte</div>
+            
+            <div class="frow">
+                <div class="fg">
+                    <label class="fgl">Nom complet *</label>
+                    <input type="text" name="name" value="{{ user.name }}" class="fgi foc" required>
+                </div>
+                <div class="fg">
+                    <label class="fgl">Adresse Email *</label>
+                    <input type="email" name="email" value="{{ user.email }}" class="fgi" required>
+                </div>
+            </div>
+
+            <div class="fg">
+                <label class="fgl">Rôles / Permissions</label>
+                <div class="flex flex-col gap-2 mt-2">
+                    <label class="flex items-center gap-2 text-[13px] cursor-pointer">
+                        <input type="checkbox" name="roles[]" value="ROLE_ADMIN" {% if 'ROLE_ADMIN' in user.roles %}checked{% endif %}>
+                        Administrateur (Accès total)
+                    </label>
+                    <label class="flex items-center gap-2 text-[13px] cursor-pointer">
+                        <input type="checkbox" name="roles[]" value="ROLE_STAFF" {% if 'ROLE_STAFF' in user.roles %}checked{% endif %}>
+                        Staff (Gestion matchs/équipes)
+                    </label>
+                    <label class="flex items-center gap-2 text-[13px] cursor-pointer">
+                        <input type="checkbox" name="roles[]" value="ROLE_VIEWER" {% if 'ROLE_VIEWER' in user.roles %}checked{% endif %}>
+                        Viewer (Lecture seule)
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="fcard">
+            <div class="fstitle">Réinitialisation du mot de passe</div>
+            <p class="text-[12px] text-text-muted mb-4">Laissez vide pour conserver le mot de passe actuel. Si vous le changez, n'oubliez pas de le transmettre à l'utilisateur.</p>
+            
+            <div class="fg">
+                <label class="fgl">Nouveau mot de passe</label>
+                <input type="text" name="password" class="fgi" placeholder="Saisir un nouveau mot de passe...">
+            </div>
+        </div>
+
+        <div class="factions">
+            <a href="{{ path('app_admin_user_index') }}" class="fac flex items-center gap-2">
+                <i class="ti ti-arrow-left"></i> Annuler
+            </a>
+            <button type="submit" class="fap flex items-center gap-2">
+                Enregistrer les modifications <i class="ti ti-arrow-right"></i>
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .fcard { background:#fff; border-radius:7px; border:0.5px solid #DDE3ED; padding:24px; margin-bottom:16px; }
+    .fstitle { font-size:10px; font-weight:700; color:#8A96A8; text-transform:uppercase; letter-spacing:.07em; margin-bottom:20px; padding-bottom:8px; border-bottom:0.5px solid #DDE3ED; }
+    .fg { display:flex; flex-direction:column; gap:6px; }
+    .fgl { font-size:11px; font-weight:600; color:#374151; }
+    .fgi { height:40px; border:1.5px solid #DDE3ED; border-radius:6px; padding:0 12px; font-size:13px; background:#fff; color:#0D1F3C; width:100%; outline:none; }
+    .fgi:focus { border-color:#005BAA; box-shadow:0 0 0 3px rgba(0,91,170,0.1); }
+    .factions { display:flex; align-items:center; justify-content:flex-end; gap:12px; }
+    .fac { font-size:12px; padding:8px 16px; border-radius:6px; border:1px solid #DDE3ED; color:#8A96A8; background:transparent; font-weight:600; text-decoration:none; }
+    .fap { font-size:12px; padding:8px 20px; border-radius:6px; background:#005BAA; color:#fff; border:none; font-weight:700; }
+</style>
+{% endblock %}

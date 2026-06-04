@@ -1,0 +1,462 @@
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;padding-bottom:14px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.pill{font-size:12px;padding:5px 14px;border-radius:20px;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary);color:var(--color-text-secondary);cursor:pointer;transition:all .15s}
+.pill.on{background:#005BAA;color:#fff;border-color:#005BAA}
+.pill:hover:not(.on){background:var(--color-background-primary);color:var(--color-text-primary)}
+.pg{display:none}.pg.on{display:block}
+.plabel{font-size:11px;font-weight:500;letter-spacing:.09em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:10px}
+.frame{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;background:#EEF2F7;margin-bottom:16px}
+
+/* sidebar */
+.shell{display:flex;height:480px}
+.sb{width:200px;flex-shrink:0;background:#0D1F3C;display:flex;flex-direction:column}
+.sb-logo{padding:14px 12px 12px;border-bottom:0.5px solid rgba(255,255,255,.07)}
+.sb-icon{width:30px;height:30px;border-radius:7px;background:#005BAA;display:flex;align-items:center;justify-content:center;margin-bottom:7px;color:#fff;font-size:16px}
+.sb-name{font-size:13px;font-weight:700;color:#fff;letter-spacing:-.01em}
+.sb-sub{font-size:9px;color:rgba(255,255,255,.3);letter-spacing:.06em;margin-top:1px}
+.sb-user{padding:10px 12px;border-bottom:0.5px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:8px}
+.sb-av{width:28px;height:28px;border-radius:50%;background:#005BAA;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#93C5FD;flex-shrink:0}
+.sb-uname{font-size:11px;font-weight:600;color:#fff}
+.sb-urole{font-size:9px;color:rgba(255,255,255,.35)}
+.sb-nav{flex:1;padding:10px 0;overflow:hidden}
+.sb-grp{font-size:9px;font-weight:600;letter-spacing:.12em;color:rgba(255,255,255,.22);padding:8px 12px 4px;text-transform:uppercase}
+.sb-lnk{display:flex;align-items:center;gap:8px;padding:7px 12px;font-size:11px;color:rgba(255,255,255,.48);cursor:pointer;border-left:2px solid transparent;transition:all .12s}
+.sb-lnk.on{color:#fff;background:#005BAA;border-left:2px solid #60A5FA}
+.sb-lnk:hover:not(.on){color:rgba(255,255,255,.8);background:rgba(255,255,255,.05)}
+.sb-lnk i{font-size:15px;flex-shrink:0}
+.sb-foot{padding:8px 0;border-top:0.5px solid rgba(255,255,255,.07)}
+
+/* topbar */
+.tbar{height:46px;background:#fff;border-bottom:0.5px solid #DDE3ED;display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex-shrink:0}
+.bread{font-size:11px;color:#8A96A8}
+.bread span{color:#0D1F3C;font-weight:500}
+.tbar-r{display:flex;align-items:center;gap:8px}
+.nb{width:28px;height:28px;border-radius:6px;background:#EEF2F7;display:flex;align-items:center;justify-content:center;color:#8A96A8;font-size:14px}
+.tav{width:28px;height:28px;border-radius:50%;background:#005BAA;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff}
+
+/* main */
+.mc{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.pb{flex:1;padding:14px;overflow:hidden;background:#EEF2F7}
+
+/* kpi */
+.kgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.kc{background:#fff;border-radius:7px;border:0.5px solid #DDE3ED;padding:10px;border-top:3px solid var(--kk)}
+.kl{font-size:9px;color:#8A96A8;font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+.kv{font-size:20px;font-weight:700;color:#0D1F3C;margin:2px 0}
+.ks{font-size:9px;color:#B0BAC9}
+
+/* card */
+.dc{background:#fff;border-radius:7px;border:0.5px solid #DDE3ED;overflow:hidden}
+.dch{padding:9px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid #DDE3ED}
+.dct{font-size:11px;font-weight:600;color:#0D1F3C}
+.bsm{font-size:10px;padding:3px 9px;border-radius:4px;border:0.5px solid #005BAA;color:#005BAA;background:transparent;cursor:pointer}
+.mt{width:100%;border-collapse:collapse;font-size:10px;table-layout:fixed}
+.mt th{background:#F5F8FC;padding:5px 9px;text-align:left;font-size:9px;font-weight:600;color:#8A96A8;text-transform:uppercase;letter-spacing:.04em;border-bottom:0.5px solid #DDE3ED}
+.mt td{padding:6px 9px;border-bottom:0.5px solid #F1F5F9;color:#0D1F3C;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bdg{font-size:9px;padding:2px 7px;border-radius:10px;font-weight:500}
+.bg{background:#DCFCE7;color:#166534}
+.bb{background:#DBEAFE;color:#1E40AF}
+.ba{background:#FEF3C7;color:#92400E}
+
+/* login */
+.lsplit{display:flex;height:440px}
+.ll{width:44%;background:#0D1F3C;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px;gap:14px}
+.ll-icon{width:50px;height:50px;border-radius:11px;background:#005BAA;display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px}
+.ll-big{font-size:19px;font-weight:700;color:#fff;text-align:center;line-height:1.3}
+.ll-tag{font-size:10px;color:rgba(255,255,255,.38);text-align:center}
+.ll-feats{width:100%;display:flex;flex-direction:column;gap:7px;margin-top:4px}
+.ll-f{display:flex;align-items:center;gap:8px;font-size:10px;color:rgba(255,255,255,.55)}
+.ll-fd{width:13px;height:13px;border-radius:50%;background:rgba(96,165,250,.15);border:1px solid #60A5FA;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.ll-fd::after{content:'';width:4px;height:4px;border-radius:50%;background:#60A5FA}
+.lr{flex:1;background:#EEF2F7;display:flex;align-items:center;justify-content:center;padding:22px}
+.lbox{background:#fff;border-radius:9px;border:0.5px solid #DDE3ED;padding:22px;width:100%}
+.lt{font-size:15px;font-weight:700;color:#0D1F3C;margin-bottom:2px}
+.ls{font-size:10px;color:#8A96A8;margin-bottom:14px}
+.ll2{font-size:9px;font-weight:500;color:#374151;margin-bottom:3px}
+.iw{position:relative;margin-bottom:9px}
+.ii{width:100%;height:36px;border:1.5px solid #DDE3ED;border-radius:6px;padding:0 9px 0 30px;font-size:11px;color:#0D1F3C;background:#fff}
+.ii.focus{border-color:#005BAA;box-shadow:0 0 0 3px rgba(0,91,170,.1)}
+.iic{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#B0BAC9;font-size:14px}
+.lfgt{font-size:9px;color:#005BAA;text-align:right;margin:-5px 0 9px}
+.lbtn{width:100%;height:36px;border-radius:5px;background:#005BAA;color:#fff;border:none;font-size:12px;font-weight:600;cursor:pointer;margin-top:3px}
+.lfoot{font-size:9px;color:#B0BAC9;text-align:center;margin-top:12px}
+
+/* form page */
+.fp{height:480px;display:flex;flex-direction:column;background:#EEF2F7}
+.fbody{flex:1;padding:14px;display:flex;gap:10px;overflow:hidden}
+.fsbmini{width:136px;flex-shrink:0;background:#0D1F3C;border-radius:7px;padding:8px 0}
+.fmain{flex:1;overflow:hidden;display:flex;flex-direction:column;gap:0}
+.fcard{background:#fff;border-radius:7px;border:0.5px solid #DDE3ED;padding:12px;margin-bottom:8px}
+.fstitle{font-size:9px;font-weight:600;color:#8A96A8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;padding-bottom:5px;border-bottom:0.5px solid #DDE3ED}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px}
+.fg{display:flex;flex-direction:column;gap:3px}
+.fgl{font-size:9px;font-weight:500;color:#374151}
+.fgi{height:32px;border:1.5px solid #DDE3ED;border-radius:5px;padding:0 9px;font-size:10px;background:#fff;color:#0D1F3C;width:100%}
+.fgi.foc{border-color:#005BAA;box-shadow:0 0 0 2px rgba(0,91,170,.1)}
+.factions{background:#fff;border-top:0.5px solid #DDE3ED;padding:9px 12px;display:flex;align-items:center;justify-content:flex-end;gap:7px}
+.fac{font-size:11px;padding:5px 12px;border-radius:5px;border:0.5px solid #DDE3ED;color:#8A96A8;background:transparent;cursor:pointer}
+.fap{font-size:11px;padding:5px 14px;border-radius:5px;background:#005BAA;color:#fff;border:none;cursor:pointer;font-weight:600}
+
+/* classement */
+.rr{display:flex;align-items:center;gap:7px;padding:6px 9px;border-bottom:0.5px solid #F1F5F9}
+.rn{width:18px;height:18px;border-radius:4px;background:#F0F4FA;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#8A96A8;flex-shrink:0}
+.rn.g{background:#FEF3C7;color:#92400E}
+.rn.s{background:#F1F5F9;color:#475569}
+.rn.b{background:#FFF0E7;color:#9A3412}
+.rname{flex:1;font-size:10px;font-weight:500;color:#0D1F3C}
+.rpts{font-size:10px;font-weight:700;color:#005BAA;min-width:30px;text-align:right}
+.rbar{height:4px;border-radius:2px;background:#005BAA;margin:2px 9px}
+.rbg{height:4px;background:#E8EDF5;border-radius:2px;margin:2px 9px}
+
+/* symfony badge */
+.sym-badge{display:inline-flex;align-items:center;gap:5px;background:#E6F1FB;color:#0C447C;font-size:9px;font-weight:600;padding:3px 9px;border-radius:4px;letter-spacing:.04em;margin-bottom:10px}
+.sym-badge i{font-size:12px}
+
+/* twig badge on forms */
+.twig-hint{font-size:9px;color:#0C447C;background:#E6F1FB;padding:2px 7px;border-radius:3px;margin-left:6px;font-weight:500}
+</style>
+
+<h2 class="sr-only">Maquettes interactives UniGames version Symfony : dashboard, login, formulaire Twig, classement et liste des équipes</h2>
+
+<div class="pills">
+  <div class="pill on" onclick="sw('db',this)">Dashboard</div>
+  <div class="pill" onclick="sw('lg',this)">Login</div>
+  <div class="pill" onclick="sw('fm',this)">Formulaire Twig</div>
+  <div class="pill" onclick="sw('cl',this)">Classement</div>
+  <div class="pill" onclick="sw('li',this)">Liste équipes</div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="pg on" id="p-db">
+  <div class="plabel">Dashboard — vue d'ensemble</div>
+  <div class="sym-badge"><i class="ti ti-brand-symfony" aria-hidden="true"></i> Symfony 7 · Twig · Doctrine ORM</div>
+  <div class="frame">
+    <div class="shell">
+      <div class="sb">
+        <div class="sb-logo">
+          <div class="sb-icon"><i class="ti ti-trophy" aria-hidden="true"></i></div>
+          <div class="sb-name">UniGames</div>
+          <div class="sb-sub">SPORTS MANAGEMENT</div>
+        </div>
+        <div class="sb-user">
+          <div class="sb-av">AD</div>
+          <div><div class="sb-uname">Administrateur</div><div class="sb-urole">Super Admin</div></div>
+        </div>
+        <div class="sb-nav">
+          <div class="sb-grp">Général</div>
+          <div class="sb-lnk on"><i class="ti ti-layout-dashboard" aria-hidden="true"></i> Dashboard</div>
+          <div class="sb-grp">Gestion</div>
+          <div class="sb-lnk"><i class="ti ti-calendar-event" aria-hidden="true"></i> Éditions</div>
+          <div class="sb-lnk"><i class="ti ti-building" aria-hidden="true"></i> Facultés</div>
+          <div class="sb-lnk"><i class="ti ti-ball-football" aria-hidden="true"></i> Disciplines</div>
+          <div class="sb-lnk"><i class="ti ti-users" aria-hidden="true"></i> Équipes</div>
+          <div class="sb-lnk"><i class="ti ti-user" aria-hidden="true"></i> Joueurs</div>
+          <div class="sb-grp">Compétition</div>
+          <div class="sb-lnk"><i class="ti ti-device-gamepad" aria-hidden="true"></i> Matchs</div>
+          <div class="sb-lnk"><i class="ti ti-chart-bar" aria-hidden="true"></i> Classements</div>
+        </div>
+        <div class="sb-foot">
+          <div class="sb-lnk"><i class="ti ti-logout" aria-hidden="true"></i> Déconnexion</div>
+        </div>
+      </div>
+      <div class="mc">
+        <div class="tbar">
+          <div class="bread"><span>Dashboard</span></div>
+          <div class="tbar-r">
+            <div class="nb"><i class="ti ti-bell" aria-hidden="true"></i></div>
+            <div class="tav">AD</div>
+          </div>
+        </div>
+        <div class="pb">
+          <div class="kgrid">
+            <div class="kc" style="--kk:#005BAA"><div class="kl">Éditions</div><div class="kv">3</div><div class="ks">actives</div></div>
+            <div class="kc" style="--kk:#10B981"><div class="kl">Équipes</div><div class="kv">24</div><div class="ks">inscrites</div></div>
+            <div class="kc" style="--kk:#F59E0B"><div class="kl">Matchs</div><div class="kv">48</div><div class="ks">joués</div></div>
+            <div class="kc" style="--kk:#EF4444"><div class="kl">Joueurs</div><div class="kv">312</div><div class="ks">enregistrés</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+            <div class="dc">
+              <div class="dch"><div class="dct">Matchs récents</div><button class="bsm">Voir tout</button></div>
+              <table class="mt">
+                <tr><th>Équipes</th><th>Score</th><th>Statut</th></tr>
+                <tr><td>Lions vs Aigles</td><td style="font-weight:700">2 – 1</td><td><span class="bdg bg">Joué</span></td></tr>
+                <tr><td>Cobras vs Panthères</td><td style="font-weight:700">0 – 0</td><td><span class="bdg ba">En cours</span></td></tr>
+                <tr><td>Requins vs Faucons</td><td style="color:#B0BAC9">– –</td><td><span class="bdg bb">Planifié</span></td></tr>
+              </table>
+            </div>
+            <div class="dc">
+              <div class="dch"><div class="dct">Top classement</div></div>
+              <div class="rr"><div class="rn g">1</div><div class="rname">Fac. des Sciences</div><div class="rpts">21 pts</div></div>
+              <div class="rbg"><div class="rbar" style="width:100%"></div></div>
+              <div class="rr"><div class="rn s">2</div><div class="rname">Fac. de Droit</div><div class="rpts">18 pts</div></div>
+              <div class="rbg"><div class="rbar" style="width:85%"></div></div>
+              <div class="rr"><div class="rn b">3</div><div class="rname">Fac. de Médecine</div><div class="rpts">15 pts</div></div>
+              <div class="rbg"><div class="rbar" style="width:71%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div class="pg" id="p-lg">
+  <div class="plabel">Page login — split-screen enterprise Symfony Security</div>
+  <div class="sym-badge"><i class="ti ti-shield-lock" aria-hidden="true"></i> Symfony Security Component · login_check route</div>
+  <div class="frame">
+    <div class="lsplit">
+      <div class="ll">
+        <div class="ll-icon"><i class="ti ti-trophy" aria-hidden="true"></i></div>
+        <div class="ll-big">UniGames<br>Sports Platform</div>
+        <div class="ll-tag">Where Champions Are Made</div>
+        <div class="ll-feats">
+          <div class="ll-f"><div class="ll-fd"></div>Real-time tournament management</div>
+          <div class="ll-f"><div class="ll-fd"></div>Live standings &amp; rankings</div>
+          <div class="ll-f"><div class="ll-fd"></div>Multi-sport university platform</div>
+        </div>
+      </div>
+      <div class="lr">
+        <div class="lbox">
+          <div class="lt">Welcome back</div>
+          <div class="ls">Sign in to your admin account</div>
+          <div class="ll2">Email address</div>
+          <div class="iw">
+            <i class="ti ti-mail iic" aria-hidden="true"></i>
+            <input class="ii" placeholder="admin@unigames.edu" type="email" />
+          </div>
+          <div class="ll2">Password</div>
+          <div class="iw">
+            <i class="ti ti-lock iic" aria-hidden="true"></i>
+            <input class="ii focus" placeholder="••••••••" type="password" />
+          </div>
+          <div class="lfgt">Forgot password?</div>
+          <button class="lbtn">Sign In</button>
+          <div class="lfoot">© 2025 UniGames · All rights reserved</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="pg" id="p-fm">
+  <div class="plabel">Formulaire Twig — ajouter une équipe</div>
+  <div class="sym-badge"><i class="ti ti-forms" aria-hidden="true"></i> Symfony Form Component · EquipeType · FormBuilder</div>
+  <div class="frame">
+    <div class="fp">
+      <div class="tbar">
+        <div class="bread">Gestion / Équipes / <span>Ajouter une équipe</span></div>
+        <div class="tbar-r">
+          <div class="nb"><i class="ti ti-bell" aria-hidden="true"></i></div>
+          <div class="tav">AD</div>
+        </div>
+      </div>
+      <div class="fbody">
+        <div class="fsbmini">
+          <div class="sb-grp">Général</div>
+          <div class="sb-lnk"><i class="ti ti-layout-dashboard" aria-hidden="true"></i> Dashboard</div>
+          <div class="sb-grp">Gestion</div>
+          <div class="sb-lnk"><i class="ti ti-calendar-event" aria-hidden="true"></i> Éditions</div>
+          <div class="sb-lnk"><i class="ti ti-building" aria-hidden="true"></i> Facultés</div>
+          <div class="sb-lnk on"><i class="ti ti-users" aria-hidden="true"></i> Équipes</div>
+          <div class="sb-lnk"><i class="ti ti-user" aria-hidden="true"></i> Joueurs</div>
+          <div class="sb-grp">Compétition</div>
+          <div class="sb-lnk"><i class="ti ti-device-gamepad" aria-hidden="true"></i> Matchs</div>
+        </div>
+        <div class="fmain">
+          <div class="fcard">
+            <div class="fstitle">Informations générales <span class="twig-hint">{{ form_widget(form) }}</span></div>
+            <div class="fg" style="margin-bottom:7px">
+              <div class="fgl">Nom de l'équipe *</div>
+              <input class="fgi foc" placeholder="Ex: Les Lions de Conakry" style="width:100%" />
+            </div>
+            <div class="frow">
+              <div class="fg">
+                <div class="fgl">Faculté *</div>
+                <select class="fgi" style="width:100%"><option>Fac. des Sciences</option></select>
+              </div>
+              <div class="fg">
+                <div class="fgl">Discipline *</div>
+                <select class="fgi" style="width:100%"><option>Football</option></select>
+              </div>
+            </div>
+            <div class="fg">
+              <div class="fgl">Description (optionnel)</div>
+              <textarea class="fgi" style="width:100%;height:46px;padding-top:6px;resize:none" placeholder="Informations complémentaires..."></textarea>
+            </div>
+          </div>
+          <div class="factions">
+            <button class="fac"><i class="ti ti-arrow-left" aria-label="Retour" style="font-size:12px;margin-right:3px"></i>Annuler</button>
+            <button class="fap">Enregistrer <i class="ti ti-arrow-right" aria-hidden="true" style="font-size:12px;margin-left:3px"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CLASSEMENT -->
+<div class="pg" id="p-cl">
+  <div class="plabel">Page classement — Doctrine ORM query auto</div>
+  <div class="sym-badge"><i class="ti ti-database" aria-hidden="true"></i> Doctrine ORM · ClassementRepository · QueryBuilder</div>
+  <div class="frame">
+    <div class="shell">
+      <div class="sb">
+        <div class="sb-logo">
+          <div class="sb-icon"><i class="ti ti-trophy" aria-hidden="true"></i></div>
+          <div class="sb-name">UniGames</div>
+          <div class="sb-sub">SPORTS MANAGEMENT</div>
+        </div>
+        <div class="sb-user">
+          <div class="sb-av">AD</div>
+          <div><div class="sb-uname">Administrateur</div><div class="sb-urole">Super Admin</div></div>
+        </div>
+        <div class="sb-nav">
+          <div class="sb-grp">Général</div>
+          <div class="sb-lnk"><i class="ti ti-layout-dashboard" aria-hidden="true"></i> Dashboard</div>
+          <div class="sb-grp">Compétition</div>
+          <div class="sb-lnk"><i class="ti ti-device-gamepad" aria-hidden="true"></i> Matchs</div>
+          <div class="sb-lnk on"><i class="ti ti-chart-bar" aria-hidden="true"></i> Classements</div>
+          <div class="sb-lnk"><i class="ti ti-report-analytics" aria-hidden="true"></i> Statistiques</div>
+        </div>
+      </div>
+      <div class="mc">
+        <div class="tbar">
+          <div class="bread">Compétition / <span>Classements</span></div>
+          <div class="tbar-r"><div class="tav">AD</div></div>
+        </div>
+        <div class="pb">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+            <div class="dc">
+              <div class="dch"><div class="dct">Football — Groupe A</div><span class="bdg bg">En cours</span></div>
+              <table class="mt">
+                <tr><th>#</th><th>Équipe</th><th>Pts</th><th>J</th></tr>
+                <tr><td><span class="rn g" style="display:inline-flex;width:15px;height:15px;font-size:8px">1</span></td><td>Les Lions</td><td style="font-weight:700;color:#005BAA">21</td><td>7</td></tr>
+                <tr><td><span class="rn s" style="display:inline-flex;width:15px;height:15px;font-size:8px">2</span></td><td>Les Aigles</td><td style="font-weight:700;color:#005BAA">18</td><td>7</td></tr>
+                <tr><td><span class="rn b" style="display:inline-flex;width:15px;height:15px;font-size:8px">3</span></td><td>Les Cobras</td><td style="font-weight:700;color:#005BAA">12</td><td>7</td></tr>
+                <tr><td style="color:#B0BAC9;font-size:9px">4</td><td>Les Requins</td><td style="color:#8A96A8">9</td><td>7</td></tr>
+              </table>
+            </div>
+            <div class="dc">
+              <div class="dch"><div class="dct">Meilleurs buteurs</div></div>
+              <div class="rr"><div class="rn g">1</div><div class="rname">Mamadou Diallo</div><div class="rpts">12 buts</div></div>
+              <div class="rbg"><div class="rbar" style="width:100%"></div></div>
+              <div class="rr"><div class="rn s">2</div><div class="rname">Ibrahima Bah</div><div class="rpts">9 buts</div></div>
+              <div class="rbg"><div class="rbar" style="width:75%"></div></div>
+              <div class="rr"><div class="rn b">3</div><div class="rname">Oumar Camara</div><div class="rpts">7 buts</div></div>
+              <div class="rbg"><div class="rbar" style="width:58%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LISTE -->
+<div class="pg" id="p-li">
+  <div class="plabel">Liste équipes — CRUD Symfony</div>
+  <div class="sym-badge"><i class="ti ti-table" aria-hidden="true"></i> EquipeController · #[Route] · EntityRepository</div>
+  <div class="frame">
+    <div class="shell">
+      <div class="sb">
+        <div class="sb-logo">
+          <div class="sb-icon"><i class="ti ti-trophy" aria-hidden="true"></i></div>
+          <div class="sb-name">UniGames</div>
+          <div class="sb-sub">SPORTS MANAGEMENT</div>
+        </div>
+        <div class="sb-user">
+          <div class="sb-av">AD</div>
+          <div><div class="sb-uname">Administrateur</div><div class="sb-urole">Super Admin</div></div>
+        </div>
+        <div class="sb-nav">
+          <div class="sb-grp">Gestion</div>
+          <div class="sb-lnk"><i class="ti ti-calendar-event" aria-hidden="true"></i> Éditions</div>
+          <div class="sb-lnk"><i class="ti ti-building" aria-hidden="true"></i> Facultés</div>
+          <div class="sb-lnk on"><i class="ti ti-users" aria-hidden="true"></i> Équipes</div>
+          <div class="sb-lnk"><i class="ti ti-user" aria-hidden="true"></i> Joueurs</div>
+        </div>
+      </div>
+      <div class="mc">
+        <div class="tbar">
+          <div class="bread">Gestion / <span>Équipes</span></div>
+          <div class="tbar-r">
+            <button class="bsm" style="background:#005BAA;color:#fff;border-color:#005BAA;display:flex;align-items:center;gap:4px"><i class="ti ti-plus" aria-hidden="true" style="font-size:12px"></i>Ajouter</button>
+            <div class="tav">AD</div>
+          </div>
+        </div>
+        <div class="pb">
+          <div class="dc">
+            <div class="dch">
+              <div class="dct">Toutes les équipes (24)</div>
+              <input style="height:26px;border:0.5px solid #DDE3ED;border-radius:5px;padding:0 8px 0 26px;font-size:10px;color:#0D1F3C;position:relative" placeholder="Rechercher..." />
+            </div>
+            <table class="mt">
+              <tr><th>Équipe</th><th>Faculté</th><th>Discipline</th><th>Joueurs</th><th>Statut</th><th>Actions</th></tr>
+              <tr>
+                <td style="font-weight:600">Les Lions</td>
+                <td>Fac. des Sciences</td>
+                <td>Football</td>
+                <td>11</td>
+                <td><span class="bdg bg">Actif</span></td>
+                <td>
+                  <span style="display:flex;gap:4px">
+                    <button class="bsm" style="padding:2px 7px;display:flex;align-items:center;gap:2px"><i class="ti ti-edit" aria-label="Modifier" style="font-size:11px"></i></button>
+                    <button class="bsm" style="padding:2px 7px;border-color:#EF4444;color:#EF4444;display:flex;align-items:center;gap:2px"><i class="ti ti-trash" aria-label="Supprimer" style="font-size:11px"></i></button>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td style="font-weight:600">Les Aigles</td>
+                <td>Fac. de Droit</td>
+                <td>Football</td>
+                <td>11</td>
+                <td><span class="bdg bg">Actif</span></td>
+                <td><span style="display:flex;gap:4px">
+                  <button class="bsm" style="padding:2px 7px;display:flex;align-items:center"><i class="ti ti-edit" aria-label="Modifier" style="font-size:11px"></i></button>
+                  <button class="bsm" style="padding:2px 7px;border-color:#EF4444;color:#EF4444;display:flex;align-items:center"><i class="ti ti-trash" aria-label="Supprimer" style="font-size:11px"></i></button>
+                </span></td>
+              </tr>
+              <tr>
+                <td style="font-weight:600">Les Cobras</td>
+                <td>Fac. de Médecine</td>
+                <td>Basketball</td>
+                <td>5</td>
+                <td><span class="bdg ba">Incomplet</span></td>
+                <td><span style="display:flex;gap:4px">
+                  <button class="bsm" style="padding:2px 7px;display:flex;align-items:center"><i class="ti ti-edit" aria-label="Modifier" style="font-size:11px"></i></button>
+                  <button class="bsm" style="padding:2px 7px;border-color:#EF4444;color:#EF4444;display:flex;align-items:center"><i class="ti ti-trash" aria-label="Supprimer" style="font-size:11px"></i></button>
+                </span></td>
+              </tr>
+              <tr>
+                <td style="font-weight:600">Les Requins</td>
+                <td>Fac. des Lettres</td>
+                <td>Athlétisme</td>
+                <td>8</td>
+                <td><span class="bdg bb">Nouveau</span></td>
+                <td><span style="display:flex;gap:4px">
+                  <button class="bsm" style="padding:2px 7px;display:flex;align-items:center"><i class="ti ti-edit" aria-label="Modifier" style="font-size:11px"></i></button>
+                  <button class="bsm" style="padding:2px 7px;border-color:#EF4444;color:#EF4444;display:flex;align-items:center"><i class="ti ti-trash" aria-label="Supprimer" style="font-size:11px"></i></button>
+                </span></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function sw(id,el){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));
+  document.getElementById('p-'+id).classList.add('on');
+  el.classList.add('on');
+}
+</script>

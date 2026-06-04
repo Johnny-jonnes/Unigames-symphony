@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Facultés - UniGames{% endblock %}
+
+{% block breadcrumb %}Gestion / <span>Facultés</span>{% endblock %}
+
+{% block body %}
+<div class="dc">
+    <div class="dch">
+        <div class="dct">
+            {% if activeEdition %}
+                Facultés · {{ activeEdition.nom }}{% if active_discipline %} · {{ active_discipline.nom }}{% endif %} ({{ facultes|length }})
+            {% else %}
+                Liste des Facultés
+            {% endif %}
+        </div>
+        {% if is_granted('ROLE_ADMIN') and activeEdition %}
+            <a href="{{ path('app_faculte_new') }}" class="bsm bsm-primary">
+                <i class="ti ti-plus text-[12px]"></i> Ajouter une faculté
+            </a>
+        {% endif %}
+    </div>
+    <div class="overflow-x-auto">
+        <table class="mt">
+            <thead>
+                <tr>
+                    <th>Nom de la faculté</th>
+                    <th>Université</th>
+                    <th>Édition</th>
+                    <th class="text-center">Équipes</th>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <th class="text-right">Actions</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for faculte in facultes %}
+                    <tr>
+                        <td class="font-bold">{{ faculte.nom }}</td>
+                        <td>{{ faculte.universite }}</td>
+                        <td><span class="bdg bb">{{ faculte.edition.nom }}</span></td>
+                        <td class="text-center font-mono font-bold">{{ faculte.equipes|length }}</td>
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <td class="text-right">
+                            <div class="flex justify-end gap-2">
+                                <a href="{{ path('app_faculte_edit', {'id': faculte.id}) }}" class="bsm !p-1.5"><i class="ti ti-edit"></i></a>
+                            </div>
+                        </td>
+                        {% endif %}
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center py-10 text-text-sub italic">
+                            {% if not activeEdition %}
+                                <i class="ti ti-calendar-off text-[28px] text-slate-200 mb-2 block"></i>
+                                Veuillez sélectionner une édition pour afficher les facultés.
+                            {% else %}
+                                Aucune faculté pour cette édition.
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

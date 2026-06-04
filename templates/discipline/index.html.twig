@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Disciplines - UniGames{% endblock %}
+
+{% block breadcrumb %}Gestion / <span>Disciplines</span>{% endblock %}
+
+{% block body %}
+<div class="dc">
+    <div class="dch">
+        <div class="dct">Disciplines sportives ({{ disciplines|length }})</div>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_discipline_new') }}" class="bsm bsm-primary">
+                <i class="ti ti-plus text-[12px]"></i> Nouvelle discipline
+            </a>
+        {% endif %}
+    </div>
+    <div class="overflow-x-auto">
+        <table class="mt">
+            <thead>
+                <tr>
+                    <th>Discipline</th>
+                    <th>Joueurs / Équipe</th>
+                    <th class="text-center">Équipes</th>
+                    <th class="text-center">Matchs</th>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <th class="text-right">Actions</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for discipline in disciplines %}
+                    <tr>
+                        <td class="font-bold">
+                            <div class="flex items-center gap-2">
+                                <i class="ti {{ discipline.nom|lower == 'football' ? 'ti-ball-football' : (discipline.nom|lower == 'basketball' ? 'ti-ball-basketball' : 'ti-award') }} text-primary"></i>
+                                {{ discipline.nom }}
+                            </div>
+                        </td>
+                        <td><span class="bdg ba">{{ discipline.nombreJoueursParEquipe }} joueurs</span></td>
+                        <td class="text-center font-bold text-slate-500">{{ discipline.equipes|length }}</td>
+                        <td class="text-center font-bold text-slate-500">{{ discipline.matchs|length }}</td>
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <td class="text-right">
+                            <div class="flex justify-end gap-2">
+                                <a href="{{ path('app_discipline_edit', {'id': discipline.id}) }}" class="bsm !p-1.5"><i class="ti ti-edit"></i></a>
+                            </div>
+                        </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
